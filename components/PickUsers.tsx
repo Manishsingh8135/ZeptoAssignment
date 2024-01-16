@@ -113,8 +113,8 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
               onMouseEnter={() => handleItemMouseEnter(index)}
               className={`cursor-pointer bg-slate-500 ${
                 index === highlightedIndex
-                  ? 'bg-gray-900 p-3 px-5'
-                  : 'hover:bg-gray-700 '
+                  ? 'bg-gray-900 '
+                  : 'bg-slate-500  hover:bg-gray-900'
               } text-white p-3 flex items-center gap-4`}
             >
               <img
