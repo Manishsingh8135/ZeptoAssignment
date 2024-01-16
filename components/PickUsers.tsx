@@ -101,7 +101,7 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
       </div>
       <ul
         ref={suggestionListRef}
-        className="list-none my-2 py-2 max-h-60 overflow-auto bg-slate-500 rounded-lg"
+        className="list-none my-2  max-h-60 overflow-auto bg-slate-500 rounded-lg"
       >
         {filteredItems.length === 0 ? (
           <li className="text-white p-3">No more users!</li>
@@ -111,7 +111,7 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
               key={item.id}
               onClick={() => handleItemClick(item)}
               onMouseEnter={() => handleItemMouseEnter(index)}
-              className={`cursor-pointer bg-slate-500 ${
+              className={`cursor-pointer  ${
                 index === highlightedIndex
                   ? 'bg-gray-900 '
                   : 'bg-slate-500  hover:bg-gray-900'
