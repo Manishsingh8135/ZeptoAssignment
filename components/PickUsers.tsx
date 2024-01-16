@@ -1,5 +1,6 @@
+// 'use client' is not a recognized directive, you might want to check if it's necessary
 'use client'
-import React, { useState, ChangeEvent, KeyboardEvent, MouseEvent, useRef, useEffect } from 'react';
+import React, { useState, ChangeEvent, KeyboardEvent, useEffect, useRef } from 'react';
 import Chip from './Chip';
 import { Item } from '../data/dummyData';
 
@@ -15,10 +16,10 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
 
   const filteredItems = filter
     ? items.filter(
-      (item) =>
-        item.name.toLowerCase().includes(filter.toLowerCase()) &&
-        !selectedItems.includes(item)
-    )
+        (item) =>
+          item.name.toLowerCase().includes(filter.toLowerCase()) &&
+          !selectedItems.includes(item)
+      )
     : items.filter((item) => !selectedItems.includes(item));
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -32,40 +33,36 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
     setHighlightedIndex(null);
   };
 
-  const removeChip = () => {
-    if (selectedItems.length > 0) {
-      const lastSelected = selectedItems[selectedItems.length - 1];
-      setSelectedItems(selectedItems.filter((si) => si.id !== lastSelected.id));
-      setHighlightedIndex(null);
-    }
+  const removeChip = (item: Item) => {
+    setSelectedItems(selectedItems.filter((si) => si.id !== item.id));
+    setHighlightedIndex(null);
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Backspace' && filter === '') {
-      removeChip();
-    } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      if (selectedItems.length > 0) {
+        const lastSelected = selectedItems[selectedItems.length - 1];
+        removeChip(lastSelected);
+      }
+    } else if (event.key === 'ArrowDown') {
       event.preventDefault();
-      const direction = event.key === 'ArrowDown' ? 1 : -1;
-      const newIndex =
-        highlightedIndex === null
-          ? direction === 1
-            ? 0
-            : filteredItems.length - 1
-          : (highlightedIndex + direction + filteredItems.length) % filteredItems.length;
-      setHighlightedIndex(newIndex);
-
-      // Ensure the highlighted item is in the view
-      if (suggestionListRef.current) {
-        const itemElement = suggestionListRef.current.children[newIndex] as HTMLElement;
-        itemElement.scrollIntoView({
-          block: 'nearest',
-          inline: 'nearest',
-        });
+      if (highlightedIndex === null || highlightedIndex === filteredItems.length - 1) {
+        setHighlightedIndex(0);
+      } else {
+        setHighlightedIndex((prevIndex) => (prevIndex === null ? 0 : prevIndex + 1));
+      }
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (highlightedIndex === null || highlightedIndex === 0) {
+        setHighlightedIndex(filteredItems.length - 1);
+      } else {
+        setHighlightedIndex((prevIndex) => (prevIndex === null ? filteredItems.length - 1 : prevIndex - 1));
       }
     } else if (event.key === 'Enter' && highlightedIndex !== null) {
       selectItem(filteredItems[highlightedIndex]);
     }
   };
+  
 
   const handleItemClick = (item: Item) => {
     selectItem(item);
@@ -75,7 +72,6 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
     setHighlightedIndex(index);
   };
 
-  // Scroll to the highlighted item when the list changes
   useEffect(() => {
     if (highlightedIndex !== null && suggestionListRef.current && suggestionListRef.current.children.length > 0) {
       const itemElement = suggestionListRef.current.children[highlightedIndex] as HTMLElement;
@@ -88,19 +84,18 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
     }
   }, [highlightedIndex]);
 
-
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-2 p-2  bg-gray-700 border-b-2 border-white w-full">
+      <div className="flex flex-wrap items-center gap-2 p-2 bg-gray-700 border-b-2 border-white w-full">
         {selectedItems.map((item) => (
-          <Chip key={item.id} label={item.name} onRemove={removeChip} />
+          <Chip key={item.id} label={item.name} onRemove={() => removeChip(item)} />
         ))}
         <input
           type="text"
           value={filter}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          className="outline-none text-white  bg-gray-700 px-4 w-full flex-1 "
+          className="outline-none text-white bg-gray-700 px-4 w-full flex-1"
           placeholder="Start typing..."
         />
       </div>
@@ -116,8 +111,11 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
               key={item.id}
               onClick={() => handleItemClick(item)}
               onMouseEnter={() => handleItemMouseEnter(index)}
-              className={`cursor-pointer bg-slate-500 ${index === highlightedIndex ? 'bg-gray-900 p-3 px-5' : 'hover:bg-gray-700 '
-                } text-white p-3 flex items-center gap-4`}
+              className={`cursor-pointer bg-slate-500 ${
+                index === highlightedIndex
+                  ? 'bg-gray-900 p-3 px-5'
+                  : 'hover:bg-gray-700 '
+              } text-white p-3 flex items-center gap-4`}
             >
               <img
                 src={item.imgUrl}
@@ -132,10 +130,8 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
           ))
         )}
       </ul>
-
     </div>
   );
 };
 
 export default PickUser;
-
