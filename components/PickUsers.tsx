@@ -101,7 +101,7 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
       </div>
       <ul
         ref={suggestionListRef}
-        className="list-none m-2 py-2 max-h-60 overflow-auto bg-slate-500 rounded-lg"
+        className="list-none my-2 py-2 max-h-60 overflow-auto bg-slate-500 rounded-lg"
       >
         {filteredItems.length === 0 ? (
           <li className="text-white p-3">No more users!</li>
@@ -115,16 +115,16 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
                 index === highlightedIndex
                   ? 'bg-gray-900 '
                   : 'bg-slate-500  hover:bg-gray-900'
-              } text-white p-3 flex items-center gap-4`}
+              } text-white p-0 md:p-3 flex items-center gap-4`}
             >
               <img
                 src={item.imgUrl}
                 alt={item.name}
-                className="w-10 h-10 rounded-full"
+                className="w-10 h-10 rounded-full p-1"
               />
-              <div className="flex gap-5">
-                <span className="font-semibold">{item.name}</span>
-                <span className="text-sm text-gray-300">{item.email}</span>
+              <div className="flex gap-4 md:gap-5">
+                <span className="text-xs md:text-sm font-normal md:font-semibold pr-2">{item.name}</span>
+                <span className="text-xs md:text-sm text-gray-300 pr-2">{item.email}</span>
               </div>
             </li>
           ))
