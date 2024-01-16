@@ -115,7 +115,7 @@ const PickUser: React.FC<AutocompleteChipInputProps> = ({ items }) => {
                 index === highlightedIndex
                   ? 'bg-gray-900 '
                   : 'bg-slate-500  hover:bg-gray-900'
-              } text-white p-0 md:p-3 flex items-center gap-4`}
+              } text-white p-0 md:p-3 flex items-center gap-4 border-b border-gray-600`}
             >
               <img
                 src={item.imgUrl}
